@@ -1,8 +1,9 @@
+pip show matplotlib
+pip uninstall matplotlib
 streamlit
 datetime
 matplotlib
 appdirs
 yfinance
 plotly
-pip show matplotlib
-pip uninstall matplotlib
+
