@@ -1,3 +1,6 @@
+streamlit==1.25.0     # Replace with the latest compatible version if necessary
+yfinance==0.2.26      # Replace with the latest version
+plotly==5.15.0        # Replace with the latest version
 streamlit
 datetime
 matplotlib
