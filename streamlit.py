@@ -70,7 +70,7 @@ else:
 with st.spinner("Loading stock data..."):
     data = yf.download(symbol, start=sdate, end=edate)
 
-# Create and display interactive line chart with improved styling
+# Check if data is empty and handle it accordingly
 if not data.empty:
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=data.index, y=data['Close'], mode='lines', name='Close Price'))
@@ -86,7 +86,7 @@ if not data.empty:
     )
     st.plotly_chart(fig, use_container_width=True)
 else:
-    st.error("Failed to fetch historical data.")
+    st.error("No historical data found for the given symbol and date range.")
 
 # Footer with additional resources or credits
 st.markdown("---")  # Horizontal separator
