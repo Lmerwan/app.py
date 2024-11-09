@@ -2,6 +2,9 @@ import streamlit as st
 import datetime
 import yfinance as yf
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
+import appdir as ad
+ad.user_cache_dir = lambda *args: "/tmp"
 
 # Set up your web app with a wider layout and title
 st.set_page_config(layout="wide", page_title="Stock Data Explorer")
