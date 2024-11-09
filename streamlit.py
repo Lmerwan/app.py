@@ -1,9 +1,7 @@
 import streamlit as st
-import matplotlib.pyplot as plt
 import datetime
-import plotly.graph_objs as go
-import appdirs as ad
 import yfinance as yf
+import plotly.graph_objects as go
 
 # Set up your web app with a wider layout and title
 st.set_page_config(layout="wide", page_title="Stock Data Explorer")
@@ -13,18 +11,21 @@ st.markdown(
     """
     <style>
     .stApp {
-        background-color: #f0f2f6; /* Light gray background */
+        background-color: #f5f7fa; /* Softer light gray background */
     }
     .sidebar .sidebar-content {
-        background-color: #ffffff; /* White sidebar background */
+        background: linear-gradient(180deg, #ffffff, #e6ebf1); /* Gradient for the sidebar */
         padding: 20px;
-        border-radius: 10px;
+        border-radius: 15px;
+    }
+    .sidebar .sidebar-content h1, h2, h3 {
+        color: #005f73; /* Deep teal for sidebar headings */
     }
     .reportview-container .main .block-container {
         padding: 20px;
     }
     h1, h2 {
-        color: #333333; /* Dark gray heading color */
+        color: #333333; /* Consistent dark gray for main headings */
     }
     </style>
     """,
@@ -32,16 +33,20 @@ st.markdown(
 )
 
 # Sidebar with title and input fields
-st.sidebar.title("Stock Information")
+st.sidebar.title("📊 Stock Information")
 symbol = st.sidebar.text_input('Enter Stock Symbol:', 'AAPL').upper()
-col1, col2 = st.sidebar.columns(2, gap="medium")
+
+st.sidebar.markdown("---")  # Horizontal line for separation
+
+st.sidebar.subheader("Select Date Range")
+col1, col2 = st.sidebar.columns(2)
 with col1:
-    sdate = st.date_input('Start Date:', value=datetime.date(2023, 1, 1))
+    sdate = st.date_input('Start Date', value=datetime.date(2023, 1, 1))
 with col2:
-    edate = st.date_input('End Date:', value=datetime.date.today())
+    edate = st.date_input('End Date', value=datetime.date.today())
 
 # Main content area with title and stock data
-st.title(f"Stock Data for {symbol}")
+st.title(f"📈 Stock Data for {symbol}")
 
 # Fetch stock data
 stock = yf.Ticker(symbol)
@@ -50,18 +55,20 @@ stock = yf.Ticker(symbol)
 if stock.info:
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.write(f"**Sector:** {stock.info['sector']}")
-        st.write(f"**Beta:** {stock.info['beta']:.2f}")
+        st.write(f"**🏢 Sector:** {stock.info.get('sector', 'N/A')}")
+        st.write(f"**📉 Beta:** {stock.info.get('beta', 'N/A')}")
     with col2:
-        st.write(f"**Market Cap:** {stock.info['marketCap']:,.0f}")
-        st.write(f"**P/E Ratio:** {stock.info['forwardPE']:.2f}")
+        st.write(f"**💰 Market Cap:** {stock.info.get('marketCap', 'N/A'):,}")
+        st.write(f"**📊 P/E Ratio:** {stock.info.get('forwardPE', 'N/A')}")
     with col3:
-        st.write(f"**Website:** [{stock.info['website']}]({stock.info['website']})")
+        website = stock.info.get('website', 'N/A')
+        st.write(f"**🌐 Website:** [{website}]({website})")
 else:
     st.error("Failed to fetch company data.")
 
-# Download historical data
-data = yf.download(symbol, start=sdate, end=edate)
+# Download historical data with a loading spinner
+with st.spinner("Loading stock data..."):
+    data = yf.download(symbol, start=sdate, end=edate)
 
 # Create and display interactive line chart with improved styling
 if not data.empty:
@@ -71,12 +78,20 @@ if not data.empty:
         title=f'{symbol} Closing Prices',
         xaxis_title='Date',
         yaxis_title='Close Price',
-        template='plotly_dark',  # Using a dark theme
-        xaxis=dict(showgrid=False),  # Removing x-axis grid lines
-        yaxis=dict(showgrid=False),  # Removing y-axis grid lines
-        plot_bgcolor='rgba(0, 0, 0, 0)',  # Transparent background
-        paper_bgcolor='rgba(0, 0, 0, 0)',  # Transparent background
+        template='plotly_white',  # Light theme
+        xaxis=dict(showgrid=True, gridcolor='LightGrey'),  # Light grid lines
+        yaxis=dict(showgrid=True, gridcolor='LightGrey'),
+        plot_bgcolor='rgba(255, 255, 255, 1)',  # White background
+        paper_bgcolor='rgba(240, 242, 246, 1)',  # Light gray paper background
     )
     st.plotly_chart(fig, use_container_width=True)
 else:
     st.error("Failed to fetch historical data.")
+
+# Footer with additional resources or credits
+st.markdown("---")  # Horizontal separator
+st.markdown(
+    "<footer style='text-align: center; font-size: small; color: #6c757d;'>"
+    "Stock data provided by Yahoo Finance | App designed by [Your Name]</footer>",
+    unsafe_allow_html=True,
+)
