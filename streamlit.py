@@ -42,9 +42,9 @@ symbol = st.sidebar.text_input('Enter Stock Symbol:', 'AAPL').upper()
 st.sidebar.markdown("---")  # Horizontal line for separation
 
 st.sidebar.subheader("Select Date Range")
-col1, col2 = st.sidebar.columns(2)
+col1, col2 = st.sidebar.columns(2, gap = "medium")
 with col1:
-    sdate = st.date_input('Start Date', value=datetime.date(2023, 1, 1))
+    sdate = st.date_input('Start Date', value=datetime.date(2024, 1, 1))
 with col2:
     edate = st.date_input('End Date', value=datetime.date.today())
 
