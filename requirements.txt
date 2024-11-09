@@ -1,5 +1,3 @@
-pip show matplotlib
-pip uninstall matplotlib
 streamlit
 datetime
 matplotlib
